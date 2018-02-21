@@ -6,7 +6,7 @@ var io = require('socket.io')(server);
 //store the coordinates of all the clients (players)
 var players = {};
 
-app.use(express.static(__dirname + '/public')); 
+app.use(express.static(__dirname + '/public'));
 //redirect / to our index.html file
 app.get('/', function(req, res,next) {  
     res.sendFile(__dirname + '/public/index.html');

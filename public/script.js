@@ -1,9 +1,5 @@
-var ball;
-var paddles= {};
-var x = 0;
-var y = 0;
-var dy = 20;
-
+var x = 20;
+var y  = 20;
 //store the x, y pos of all players
 var players = {};
 
@@ -20,16 +16,17 @@ socket.on('playerUpdate', function(id,pos){
 });
 
 function setup() {
-	createCanvas(1000,400);
+	createCanvas(400,400);
 
-	ball = new Ball(200, 200, 7, 5, 0, 0, 20);
+	//x, y, vx, vy, ax, ay, m
+	// ball = new Ball(200, 200, 0, 0, 0, 0, 20);
 
-	for(player in players) {
-		var i = Object.keys(players).indexOf(player);
-		paddles[i] = new Paddle(players[player].x, players[player].y);
+	// for(player in players) {
+	// 	var i = Object.keys(players).indexOf(player);
+	// 	balls[i] = new Ball(players[player].x, players[player].y, 0, 0, 0, 0, 20);
 		
-		// console.log(paddles);
-	}
+	// 	// console.log(paddles);
+	// }
 
 	console.log(socket.id);
 
@@ -42,26 +39,41 @@ function draw() {
 	strokeWeight(2);
 	line(0, 0, 300, 300);
 
-	ball.checkEdges(paddles);
-	ball.update();
-	ball.display();
-
-
 	for(player in players) {
-		var i = Object.keys(players).indexOf(player);
+		var ball = new Ball(players[player].x, players[player].y, 0, 0, 0, 0, 20);
+		// var i = Object.keys(players).indexOf(player);
 
-		paddles[i].update(players[player].x, players[player].y);
-		paddles[i].display();
+		// var c = 2;
+		// var normal = 1;
+		// var frictionMag = c * normal;
+		// var friction = p5.Vector.mult(ball.velocity, -1);
+		// friction.normalize();
+		// friction.mult(frictionMag);
+		// ball.applyForce(friction);
+
+		ball.checkEdges();
+		ball.update();
+		ball.display();
+
+		x = ball.location.x;
+		y = ball.location.y;
+
+		socket.emit('moved', {x : x, y: y});
+
 	}
 
-	
+}
 
+function mousePressed() {
+	// for(player in players) {
+ // 		balls[0].goToMouse();
+ // 	}
 }
 
 function keyPressed() {
 	if (keyCode === UP_ARROW) {
 
-		if (y - dy > 0){
+		if (y - dy > 0) {
         	y -= dy;
             socket.emit('moved', {x : x, y: y});
         }
@@ -69,7 +81,7 @@ function keyPressed() {
     	// console.log("up");
   	} else if (keyCode === DOWN_ARROW) {
 
-  		if (y + dy < height){
+  		if (y + dy < height) {
             y += dy;
             socket.emit('moved', {x : x, y: y});
         }

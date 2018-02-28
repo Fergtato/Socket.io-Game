@@ -16,7 +16,7 @@ app.get('/', function(req, res,next) {
 
 io.on('connection', function(client) {  
 	//when a new client connects place them at 0,0
-	players[client.id] = {x: 0, y: 0};
+	players[client.id] = {x: 20, y: 20};
 	
 	//send a message to all other clients updating them on this new player
 	io.emit('allPlayers', players);

@@ -6,6 +6,8 @@ var io = require('socket.io')(server);
 //store the coordinates of all the clients (players)
 var players = {};
 
+var food = {x: 100, y: 100};
+
 app.use(express.static(__dirname + '/public'));
 //redirect / to our index.html file
 app.get('/', function(req, res,next) {  
@@ -20,6 +22,7 @@ io.on('connection', function(client) {
 	
 	//send a message to all other clients updating them on this new player
 	io.emit('allPlayers', players);
+	io.emit('updateFood', food);
 	console.log(players);
 	
 	//if any client moves, store their new x,y and notify all clients
@@ -27,6 +30,12 @@ io.on('connection', function(client) {
 		players[client.id] = {x: pos.x, y: pos.y};
 		
 		io.emit('playerUpdate', client.id, players[client.id]);
+	});
+
+	client.on('newFoodPos',function(pos){
+		food = {x: pos.x, y: pos.y};
+		
+		io.emit('updateFood', food);
 	});
 	
 	//if any client disconnects remove them and notify all clients

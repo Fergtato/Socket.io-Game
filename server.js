@@ -15,7 +15,6 @@ app.get('/', function(req, res,next) {
 });  
 
 //when a client connects, do this
-
 io.on('connection', function(client) {  
 	//when a new client connects place them at 0,0
 	players[client.id] = {x: 20, y: 20, score: 0, col: 'rgb(255,255,255)'};

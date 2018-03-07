@@ -28,7 +28,7 @@ Run the server
 node server.js
 ```
 
-View the project as the url
+View the project at the url
 ```
 localhost:3000
 ```

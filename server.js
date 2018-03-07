@@ -18,16 +18,15 @@ app.get('/', function(req, res,next) {
 
 io.on('connection', function(client) {  
 	//when a new client connects place them at 0,0
-	players[client.id] = {x: 20, y: 20};
+	players[client.id] = {x: 20, y: 20, score: 0, col: 'rgb(255,255,255)'};
 	
 	//send a message to all other clients updating them on this new player
 	io.emit('allPlayers', players);
 	io.emit('updateFood', food);
-	console.log(players);
 	
 	//if any client moves, store their new x,y and notify all clients
-	client.on('moved',function(pos){
-		players[client.id] = {x: pos.x, y: pos.y};
+	client.on('moved',function(player){
+		players[client.id] = {x: player.x, y: player.y, score: player.score, col: player.col};
 		
 		io.emit('playerUpdate', client.id, players[client.id]);
 	});
